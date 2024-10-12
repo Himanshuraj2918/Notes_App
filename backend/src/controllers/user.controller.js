@@ -7,15 +7,11 @@ import { options } from "../constant.js";
 const generateAccessTokenAndRefreshToken = async(userId)=>{
     try {
         const user = await User.findById(userId)
-        console.log(user);
+        // console.log(user);
         
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
-
-        console.log(accessToken);
-        console.log(refreshToken);
         
-       
         user.refreshToken = refreshToken
         await user.save({validateBeforeSave:false})
     
@@ -89,4 +85,18 @@ const loginUser = asyncHandler(async(req,res)=>{
     )
 })
 
-export {registerUser,loginUser}
+const getUser = asyncHandler(async(req,res)=>{
+    const {user} = req;
+
+    const isUser = await User.findById(user?._id).select("-password -refreshToken")
+
+    if(!isUser) throw new ApiError(400,"User not exists")
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,isUser,"User fetched successfully")
+    )
+})
+
+export {registerUser,loginUser,getUser}

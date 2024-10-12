@@ -110,7 +110,7 @@ const pinnedNote = asyncHandler(async(req,res)=>{
         }
     )
 
-    console.log(note);
+    // console.log(note);
     
     if(!note) throw new ApiError(400,"Notes not found")
 
