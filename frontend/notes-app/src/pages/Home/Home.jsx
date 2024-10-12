@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import NoteCard from '../../components/Cards/NoteCard'
 import { MdAdd } from "react-icons/md"
 import AddEditNotes from './AddEditNotes'
 import Modal from "react-modal"
+import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../../utils/axiosInstance'
 
 const Home = () => {
 
@@ -13,24 +15,67 @@ const Home = () => {
     data: null,
   })
 
+const [userInfo, setUserInfo] = useState(null)
+const [allNotes,setAllNotes] = useState([])
+const navigate = useNavigate()
+
+//get user info after login or signup
+const getUserInfo = async()=>{
+  try {
+    const response = await axiosInstance.get("/users/get-user");
+    if(response.data);{
+      setUserInfo(response.data)
+    }
+  } catch (error) {
+    navigate("/login")
+  }
+};
+
+const getAllNotes = async()=>{
+     try {
+      const response = await axiosInstance.get("/notes/get-all-note")
+ 
+      if(response.data){
+       console.log(response.data);
+       
+       setAllNotes(response.data.data)
+       
+       
+      }
+     } catch (error) {
+        console.log("unexpected error on fetching notes");
+        
+     }
+}
+
+useEffect(()=>{
+  getAllNotes()
+  getUserInfo();
+  
+return()=>{}
+},[])
 
 
   return (
     <>
-      <Navbar />
-
+      <Navbar userInfo={userInfo}/>
       <div className='container mx-auto'>
         <div className='grid grid-cols-3 gap-4 mt-8'>
-          <NoteCard
-            title="Meeting on 7th april"
-            date="3rd April 2024"
-            content="This logic depends on value being truthy. If value is an empty string  the icon will not appear. However."
-            tags="#Meeting"
-            isPinned={true}
+          {console.log(allNotes)}
+          {allNotes && allNotes.map((item,index)=>(
+            <NoteCard
+            key={item._id}
+            title={item.title}
+            date={item.createdAt.split('T')[0]}
+            content={item.content}
+            tags={item.tags}
+            isPinned={item.isPinned}
             onEdit={() => { }}
             onDelete={() => { }}
             onPinNote={() => { }}
           />
+          ))}
+          
         </div>
       </div>
 

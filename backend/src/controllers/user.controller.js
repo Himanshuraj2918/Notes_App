@@ -7,7 +7,7 @@ import { options } from "../constant.js";
 const generateAccessTokenAndRefreshToken = async(userId)=>{
     try {
         const user = await User.findById(userId)
-        // console.log(user);
+        console.log(user);
         
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
@@ -42,12 +42,19 @@ const registerUser = asyncHandler(async(req,res)=>{
         password
     })
 
+    const {accessToken,refreshToken} = await generateAccessTokenAndRefreshToken(user._id)
+    console.log(accessToken);
+    console.log(refreshToken);
+    
+
     const createdUser = await User.findById(user._id).select('-password -refreshToken')
 
     if(!createdUser) throw new ApiError(500,"Something went wrong")
 
     return res
     .status(200)
+    .cookie("accessToken",accessToken,options)
+    .cookie("refreshToken",refreshToken,options)
     .json(new ApiResponse(200,createdUser,"User register successfully"))
 })
 
@@ -77,8 +84,6 @@ const loginUser = asyncHandler(async(req,res)=>{
             200,
             {
                 user:loggedInUser,
-                accessToken,
-                refreshToken
             },
             "User logged in successfully"
         )
@@ -99,4 +104,28 @@ const getUser = asyncHandler(async(req,res)=>{
     )
 })
 
-export {registerUser,loginUser,getUser}
+const logoutUser = asyncHandler(async(req,res)=>{
+    const {user} = req;
+
+    const isUser = await User.findByIdAndUpdate(
+        user?._id,
+        {
+            $set:{
+                refreshToken:null
+            }
+        },
+        {
+            new:true
+        }
+    )
+
+    return res
+    .status(200)
+    .clearCookie("accessToken",options)
+    .clearCookie("refreshToken",options)
+    .json(
+        new ApiResponse(200,[],"user logout successfully")
+    )
+})
+
+export {registerUser,loginUser,getUser,logoutUser}

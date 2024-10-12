@@ -11,10 +11,6 @@ const SearchBar = ({value, onChange, handleSearch, onClearSearch}) => {
          value ={value}
          onChange={onChange}
          />
-         {console.log(value)}
-
-
-
       {value && (
         <IoMdClose className='text-xl text-slate-500 cursor-pointer hover:text-black mr-3' onClick={onClearSearch} />
         )}
