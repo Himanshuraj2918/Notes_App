@@ -105,6 +105,7 @@ return()=>{}
         <AddEditNotes
         type={openAddEditModel.type}
         noteData={openAddEditModel.data}
+        getAllNotes={getAllNotes}
           onClose={
             () => {
               setOpenEditModel({
