@@ -35,7 +35,10 @@ const Login = () => {
             const response = await axiosInstance.post('/users/login',{
                 email:email,
                 password:password
-            })
+            },
+        {
+            withCredentials:true
+        })
              
         //Handle successful login response
         if(response.data){
