@@ -48,7 +48,9 @@ const handleEdit = (noteDetails) =>{
 
 const getAllNotes = async()=>{
      try {
-      const response = await axiosInstance.get("/notes/get-all-note")
+      const response = await axiosInstance.get("/notes/get-all-note",{
+        withCredentials:true
+      })
  
       if(response.data){       
        setAllNotes(response.data.data) 
