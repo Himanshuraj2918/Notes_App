@@ -122,7 +122,7 @@ return()=>{}
   return (
     <>
       <Navbar userInfo={userInfo} onSearchNote={searchNote} getAllNotes={getAllNotes} />
-      <div className='container mx-auto pt-14 pb-10'>
+      <div className='container mx-auto pb-10'>
         {allNotes.length>0 ? <div className='grid grid-cols-3 gap-4 mt-8'>
 
           {allNotes.map((item)=>(
