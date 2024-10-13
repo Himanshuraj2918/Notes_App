@@ -48,12 +48,8 @@ const getAllNotes = async()=>{
      try {
       const response = await axiosInstance.get("/notes/get-all-note")
  
-      if(response.data){
-       console.log(response.data);
-       
-       setAllNotes(response.data.data)
-       
-       
+      if(response.data){       
+       setAllNotes(response.data.data) 
       }
      } catch (error) {
         setAllNotes([])
@@ -68,11 +64,7 @@ const handeleDelete = async(item)=>{
     const response = await axiosInstance.delete("/notes/delete-note/"+item._id)
 
     if(response.data){
-     console.log(response.data);
-     
      getAllNotes()
-     
-     
     }
    } catch (error) {
       console.log("unexpected error on fetching notes");
@@ -87,7 +79,6 @@ const handlePinNote = async(item)=>{
     })
 
     if(response.data){
-     console.log(response.data);
      getAllNotes()
     }
    } catch (error) {
@@ -97,14 +88,13 @@ const handlePinNote = async(item)=>{
 }
 
 const searchNote = async(query)=>{
-  console.log(query);
   
   try {
     const response = await axiosInstance.post(`/notes/search-note?query=${query}`)
-    console.log(`Hello: ${query}`);
+    // console.log(`Hello: ${query}`);
     
-    console.log(response.data);
-    console.log(response.data.data);
+    // console.log(response.data);
+    // console.log(response.data.data);
     if(response.data && response.data.data){
      setIsSearch(true)
      setAllNotes(response.data.data)

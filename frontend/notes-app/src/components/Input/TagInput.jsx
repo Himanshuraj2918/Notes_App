@@ -8,9 +8,7 @@ const TagInput = ({tags, setTags}) => {
     setInputValue(e.target.value)
    }
 
-   const addNewTag = ()=>{
-    console.log(inputValue);
-    
+   const addNewTag = ()=>{    
     if(inputValue.trim()!==""){
         setTags([...tags, inputValue.trim()])
         setInputValue("")

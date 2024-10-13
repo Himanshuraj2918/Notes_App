@@ -53,7 +53,7 @@ const navigate = useNavigate()
           setError(error.response.data)
       }
       else{
-          console.log(error);
+          // console.log(error);
           
           setError("An unexpected error occured. Please try again.")
       }

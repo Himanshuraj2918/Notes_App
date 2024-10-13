@@ -15,7 +15,7 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        console.log(validateEmail(email));
+        // console.log(validateEmail(email));
             
 
         if (!validateEmail(email)) {
@@ -48,7 +48,7 @@ const Login = () => {
                 setError(error.response.data.message)
             }
             else{
-                console.log(error);
+                // console.log(error);
                 
                 setError("An unexpected error occured. Please try again.")
             }
