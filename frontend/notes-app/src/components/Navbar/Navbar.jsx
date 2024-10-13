@@ -12,7 +12,7 @@ const Navbar = ({userInfo,onSearchNote,getAllNotes}) => {
 
   const onLogout = async () => {
     const response = await axiosInstance.get('/users/logout-user')
-    if(response){navigate("/login");}
+    if(response){navigate("/");}
     
   };
 
