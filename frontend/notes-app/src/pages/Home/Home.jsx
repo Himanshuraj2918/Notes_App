@@ -27,7 +27,9 @@ const navigate = useNavigate()
 //get user info after login or signup
 const getUserInfo = async()=>{
   try {
-    const response = await axiosInstance.get("/users/get-user");
+    const response = await axiosInstance.get("/users/get-user",{
+      withCredentials:true
+    });
     if(response.data);{
       setUserInfo(response.data)
     }
