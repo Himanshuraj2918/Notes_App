@@ -5,7 +5,7 @@ import SearchBar from "../SearchBar/SearchBar";
 import axiosInstance from '../../utils/axiosInstance'
 
 
-const Navbar = ({userInfo}) => {
+const Navbar = ({userInfo,onSearchNote,getAllNotes}) => {
   const[searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
@@ -16,15 +16,18 @@ const Navbar = ({userInfo}) => {
     
   };
 
-  const handleSearch = ()=>{
-    
+  const handleSearch = async()=>{
+   if(searchQuery){
+    onSearchNote(searchQuery)
+   }
   } 
   const onClearSearch = ()=>{
     setSearchQuery("")
+    getAllNotes()
   } 
 
   return (
-    <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
+    <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow fixed top-0 w-[100%] z-50 ">
       <h2 className="text-xl font-medium text-black py-2">Notes</h2>
 
       <SearchBar

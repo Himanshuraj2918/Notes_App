@@ -6,6 +6,9 @@ import AddEditNotes from './AddEditNotes'
 import Modal from "react-modal"
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
+import EmptyCard from '../../components/EmptyCard/EmptyCard'
+import AddNotesImg from "../../assets/images/note-1.png"
+
 
 const Home = () => {
 
@@ -17,6 +20,8 @@ const Home = () => {
 
 const [userInfo, setUserInfo] = useState(null)
 const [allNotes,setAllNotes] = useState([])
+
+const [isSearch, setIsSearch] = useState(false)
 const navigate = useNavigate()
 
 //get user info after login or signup
@@ -31,6 +36,14 @@ const getUserInfo = async()=>{
   }
 };
 
+const handleEdit = (noteDetails) =>{
+  setOpenEditModel({
+    isShown: true,
+    type: "edit",
+    data: noteDetails,
+  })
+}
+
 const getAllNotes = async()=>{
      try {
       const response = await axiosInstance.get("/notes/get-all-note")
@@ -43,9 +56,65 @@ const getAllNotes = async()=>{
        
       }
      } catch (error) {
-        console.log("unexpected error on fetching notes");
+        setAllNotes([])
+        console.log(error+" : error in fetching notes");
+        
         
      }
+}
+
+const handeleDelete = async(item)=>{
+  try {
+    const response = await axiosInstance.delete("/notes/delete-note/"+item._id)
+
+    if(response.data){
+     console.log(response.data);
+     
+     getAllNotes()
+     
+     
+    }
+   } catch (error) {
+      console.log("unexpected error on fetching notes");
+      
+   }
+}
+
+const handlePinNote = async(item)=>{
+  try {
+    const response = await axiosInstance.patch("/notes/pinned-note/"+item._id,{
+      isPinned:!item.isPinned
+    })
+
+    if(response.data){
+     console.log(response.data);
+     getAllNotes()
+    }
+   } catch (error) {
+      console.log("unexpected error on fetching notes");
+      
+   }
+}
+
+const searchNote = async(query)=>{
+  console.log(query);
+  
+  try {
+    const response = await axiosInstance.post(`/notes/search-note?query=${query}`)
+    console.log(`Hello: ${query}`);
+    
+    console.log(response.data);
+    console.log(response.data.data);
+    if(response.data && response.data.data){
+     setIsSearch(true)
+     setAllNotes(response.data.data)
+    }
+   } catch (error) {
+
+      console.log(error+" : error in search and fetching notes");
+      
+      
+   }
 }
 
 useEffect(()=>{
@@ -58,11 +127,11 @@ return()=>{}
 
   return (
     <>
-      <Navbar userInfo={userInfo}/>
-      <div className='container mx-auto'>
-        <div className='grid grid-cols-3 gap-4 mt-8'>
-          {console.log(allNotes)}
-          {allNotes && allNotes.map((item,index)=>(
+      <Navbar userInfo={userInfo} onSearchNote={searchNote} getAllNotes={getAllNotes} />
+      <div className='container mx-auto pt-14 pb-10'>
+        {allNotes.length>0 ? <div className='grid grid-cols-3 gap-4 mt-8'>
+
+          {allNotes.map((item)=>(
             <NoteCard
             key={item._id}
             title={item.title}
@@ -70,17 +139,19 @@ return()=>{}
             content={item.content}
             tags={item.tags}
             isPinned={item.isPinned}
-            onEdit={() => { }}
-            onDelete={() => { }}
-            onPinNote={() => { }}
+            onEdit={() => {handleEdit(item)}}
+            onDelete={()=>handeleDelete(item)}
+            onPinNote={() => handlePinNote(item)}
           />
-          ))}
-          
-        </div>
+          ))
+        }
+        </div>:
+        <EmptyCard imgSrc={AddNotesImg}  message="Start creating your first note! Click the 'Add' button to join. Let's get started! " />
+        }
       </div>
 
       <button
-        className='w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 bottom-10'
+        className='w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 fixed right-10 bottom-10'
         onClick={() => {
           setOpenEditModel({
             isShown: true, type: "add", data: null
@@ -99,7 +170,7 @@ return()=>{}
           }
         }}
         contentLabel=""
-        className="w-[40%] max-h-3/4 bg-white rounded-md mx-auto mt-14 p-5 overflow-auto"
+        className="w-[40%] max-h-3/4 bg-white rounded-md outline-none mx-auto mt-6 mb-4 p-5 overflow-auto"
       >
 
         <AddEditNotes

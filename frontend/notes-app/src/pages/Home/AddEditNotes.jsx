@@ -7,9 +7,9 @@ import axiosInstance from '../../utils/axiosInstance'
 const AddEditNotes = ({noteData, type,onClose,getAllNotes}) => {
 
 
-    const [title,seTitle]= useState("")
-    const [content,setContent] = useState("")
-    const [tags,setTags]= useState([])
+    const [title,setTitle]= useState(noteData?.title||"")
+    const [content,setContent] = useState(noteData?.content||"")
+    const [tags,setTags]= useState(noteData?.tags||[])
 
     const[error,setError] = useState(null)
 
@@ -34,6 +34,21 @@ const AddEditNotes = ({noteData, type,onClose,getAllNotes}) => {
   //Edit note
   const editNote =async ()=>{
 
+    const  noteId = noteData?._id
+    try {
+        const response = await axiosInstance.patch("/notes/edit-note/"+noteId,{
+            title,
+            content,
+            tags
+        })
+
+        if(response.data){
+            getAllNotes()
+            onClose()
+        }
+    } catch (error) {
+        setError(error)
+    }
   }
 
 
@@ -57,7 +72,7 @@ const AddEditNotes = ({noteData, type,onClose,getAllNotes}) => {
     }
 
     return (
-        <div className='relative'>
+        <div className='relative '>
 
            <button
             className='w-10 h-10 rounded-full flex items-center justify-center absolute -top-3 -right-3 hover:bg-slate-300 '
@@ -72,7 +87,7 @@ const AddEditNotes = ({noteData, type,onClose,getAllNotes}) => {
                     className='text-2xl text-slate-900 outline-none'
                     placeholder='Title here'
                     value={title}
-                    onChange={(e)=>seTitle(e.target.value)}
+                    onChange={(e)=>setTitle(e.target.value)}
                 />
             </div>
 
@@ -97,7 +112,7 @@ const AddEditNotes = ({noteData, type,onClose,getAllNotes}) => {
             </div>
 
             <button className='btn-primary font-medium mt-5 p-3' onClick={handleAddNote}>
-            ADD
+            {type === "edit"?"UPDATE":"ADD"}
             </button>
         </div>
     )
