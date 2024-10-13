@@ -96,7 +96,7 @@ const navigate = useNavigate()
 
             <p className="text-sm text-center mt-4">
               Already have an account?{" "}
-              <Link to="/login" className="font-medium text-primary underline">
+              <Link to="/" className="font-medium text-primary underline">
                 Login
               </Link>
             </p>

@@ -32,7 +32,7 @@ const getUserInfo = async()=>{
       setUserInfo(response.data)
     }
   } catch (error) {
-    navigate("/login")
+    navigate("/")
   }
 };
 
