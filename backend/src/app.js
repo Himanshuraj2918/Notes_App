@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser"
 
 const app = express()
 
+app.use(cookieParser())
 // CORS setup
 app.use(
     cors({
@@ -16,7 +17,7 @@ app.use(
 
 app.use(express.json({limit:"16kb"}))
 app.use(express.urlencoded({extended:true, limit:"16kb"}))
-app.use(cookieParser())
+
 
 //import router
 import userRouter from "./routes/user.routes.js"

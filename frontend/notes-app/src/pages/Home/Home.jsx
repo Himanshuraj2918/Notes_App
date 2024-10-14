@@ -27,9 +27,7 @@ const navigate = useNavigate()
 //get user info after login or signup
 const getUserInfo = async()=>{
   try {
-    const response = await axiosInstance.get("/users/get-user",{
-      withCredentials:true
-    });
+    const response = await axiosInstance.get("/users/get-user");
     if(response.data);{
       setUserInfo(response.data)
     }
@@ -48,9 +46,7 @@ const handleEdit = (noteDetails) =>{
 
 const getAllNotes = async()=>{
      try {
-      const response = await axiosInstance.get("/notes/get-all-note",{
-        withCredentials:true
-      })
+      const response = await axiosInstance.get("/notes/get-all-note")
  
       if(response.data){       
        setAllNotes(response.data.data) 
