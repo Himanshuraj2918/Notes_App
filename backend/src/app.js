@@ -4,12 +4,10 @@ import cookieParser from "cookie-parser"
 
 const app = express()
 
-const allowedOrigins = process.env.CORS_ORIGIN.split(',');
-
 // CORS setup
 app.use(
     cors({
-        origin: allowedOrigins,
+        origin: "https://notes-app-ruby-omega.vercel.app",
         credentials: true // Allow credentials (cookies, authorization headers, etc.)
     })
 );
